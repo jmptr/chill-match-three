@@ -1,0 +1,24 @@
+# misc
+*.DS_Store*
+
+node_modules
+.vscode/settings.json
+
+/.cache
+/build
+/dist
+/public/build
+/.mf
+.env*
+.shopify
+.hydrogen
+
+# IntelliJ
+.idea
+
+stats.html
+coverage
+
+# AI Agent settings
+/.roo
+.roomodes
