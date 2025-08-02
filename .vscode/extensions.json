@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "irongeek.vscode-env",
+    "redhat.vscode-yaml"
+  ]
+}
