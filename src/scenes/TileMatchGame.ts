@@ -69,7 +69,7 @@ export class TileMatchGame extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('tiles', 'assets/sprites/gems.png', {
+    this.load.spritesheet('tiles', 'assets/sprites/gem_sprite_sheet.png', {
       frameWidth: gameOptions.tileSize,
       frameHeight: gameOptions.tileSize,
     });
