@@ -41,7 +41,7 @@ type Tile = {
 
 const gameOptions: GameOptions = {
   gridSize: 7,
-  colors: 3,
+  colors: 6,
   tileSize: 100,
   swapSpeed: 200,
   fallSpeed: 100,
