@@ -25,7 +25,8 @@ import { logger, LogLevel } from '../lib/logger';
 logger.setLogLevel(LogLevel.WARN);
 
 type GameOptions = {
-  gridSize: number;
+  gridRows: number;
+  gridCols: number;
   colors: number;
   tileSize: number;
   swapSpeed: number;
@@ -40,7 +41,8 @@ type Tile = {
 };
 
 const gameOptions: GameOptions = {
-  gridSize: 7,
+  gridRows: 12,
+  gridCols: 8,
   colors: 6,
   tileSize: 100,
   swapSpeed: 200,
@@ -82,9 +84,9 @@ export class TileMatchGame extends Phaser.Scene {
     this.poolArray = [];
     this.tileGroup = this.add.group();
     logger.info('Initializing tile grid');
-    for (let i = 0; i < gameOptions.gridSize; i++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
       this.tileArray[i] = [];
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+      for (let j = 0; j < gameOptions.gridCols; j++) {
         const sprite = this.add.sprite(
           gameOptions.tileSize * j + gameOptions.tileSize / 2,
           gameOptions.tileSize * i + gameOptions.tileSize / 2,
@@ -164,9 +166,9 @@ export class TileMatchGame extends Phaser.Scene {
   tileAt(row: number, col: number): Tile | null {
     if (
       row < 0 ||
-      row >= gameOptions.gridSize ||
+      row >= gameOptions.gridRows ||
       col < 0 ||
-      col >= gameOptions.gridSize
+      col >= gameOptions.gridCols
     ) {
       return null;
     }
@@ -322,8 +324,8 @@ export class TileMatchGame extends Phaser.Scene {
 
   matchInBoard() {
     logger.info('matchInBoard');
-    for (let i = 0; i < gameOptions.gridSize; i++) {
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
+      for (let j = 0; j < gameOptions.gridCols; j++) {
         if (this.isMatch(i, j)) {
           logger.info('matchInBoard result', true);
           return true;
@@ -337,9 +339,9 @@ export class TileMatchGame extends Phaser.Scene {
 
   handleMatches() {
     this.removeMap = [];
-    for (let i = 0; i < gameOptions.gridSize; i++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
       this.removeMap[i] = [];
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+      for (let j = 0; j < gameOptions.gridCols; j++) {
         this.removeMap[i].push(0);
       }
     }
@@ -350,11 +352,23 @@ export class TileMatchGame extends Phaser.Scene {
 
   markMatches(direction: number) {
     logger.info('markMatches', direction);
-    for (let i = 0; i < gameOptions.gridSize; i++) {
+    for (
+      let i = 0;
+      i <
+      (direction === HORIZONTAL ? gameOptions.gridRows : gameOptions.gridCols);
+      i++
+    ) {
       let colorStreak = 1;
       let currentColor = -1;
       let startStreak = 0;
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+      for (
+        let j = 0;
+        j <
+        (direction === HORIZONTAL
+          ? gameOptions.gridCols
+          : gameOptions.gridRows);
+        j++
+      ) {
         const tile =
           direction === HORIZONTAL ? this.tileAt(i, j) : this.tileAt(j, i);
 
@@ -414,8 +428,8 @@ export class TileMatchGame extends Phaser.Scene {
     let totalToDestroy = 0;
 
     // Count total tiles to destroy first
-    for (let i = 0; i < gameOptions.gridSize; i++) {
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
+      for (let j = 0; j < gameOptions.gridCols; j++) {
         if (this.removeMap[i][j] > 0) {
           totalToDestroy++;
         }
@@ -430,8 +444,8 @@ export class TileMatchGame extends Phaser.Scene {
       return;
     }
 
-    for (let i = 0; i < gameOptions.gridSize; i++) {
-      for (let j = 0; j < gameOptions.gridSize; j++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
+      for (let j = 0; j < gameOptions.gridCols; j++) {
         if (this.removeMap[i][j] > 0) {
           destroyed++;
           logger.info(
@@ -476,8 +490,8 @@ export class TileMatchGame extends Phaser.Scene {
   onAfterTilesDestroyed() {
     logger.info('onAfterTilesDestroyed');
     let tilesMoved = 0;
-    for (let j = 0; j < gameOptions.gridSize; j++) {
-      for (let i = gameOptions.gridSize - 2; i >= 0; i--) {
+    for (let j = 0; j < gameOptions.gridCols; j++) {
+      for (let i = gameOptions.gridRows - 2; i >= 0; i--) {
         if (!this.tileArray[i][j].isEmpty) {
           const fallTiles = this.holesBelow(i, j);
           logger.info(`Tile at (${i}, ${j}) has ${fallTiles} holes below`);
@@ -511,7 +525,7 @@ export class TileMatchGame extends Phaser.Scene {
 
   holesBelow(row: number, col: number) {
     let result = 0;
-    for (let i = row + 1; i < gameOptions.gridSize; i++) {
+    for (let i = row + 1; i < gameOptions.gridRows; i++) {
       if (this.tileArray[i][col].isEmpty) {
         result++;
       }
@@ -525,7 +539,7 @@ export class TileMatchGame extends Phaser.Scene {
     let totalEmptySpots = 0;
 
     // Count total empty spots first
-    for (let j = 0; j < gameOptions.gridSize; j++) {
+    for (let j = 0; j < gameOptions.gridCols; j++) {
       const emptySpots = this.holesInCol(j);
       totalEmptySpots += emptySpots;
     }
@@ -541,7 +555,7 @@ export class TileMatchGame extends Phaser.Scene {
       return;
     }
 
-    for (let j = 0; j < gameOptions.gridSize; j++) {
+    for (let j = 0; j < gameOptions.gridCols; j++) {
       const emptySpots = this.holesInCol(j);
       logger.info(`Column ${j} has ${emptySpots} empty spots`);
       if (emptySpots > 0) {
@@ -603,7 +617,7 @@ export class TileMatchGame extends Phaser.Scene {
 
   holesInCol(col: number) {
     let result = 0;
-    for (let i = 0; i < gameOptions.gridSize; i++) {
+    for (let i = 0; i < gameOptions.gridRows; i++) {
       if (this.tileArray[i][col].isEmpty) {
         result++;
       }
