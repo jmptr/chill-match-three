@@ -1,4 +1,5 @@
 {
   "editor.fontFamily": "Monaspace Neon Var, Fira Code, Monaco, monospace",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.rulers": [80, 120]
 }
