@@ -1,8 +1,8 @@
-import {Scene} from 'phaser';
+import { Scene } from 'phaser';
 
 export class ClickerGame extends Scene {
   score: number;
-  coins: Phaser.GameObjects.Sprite[];
+  coins: Phaser.Physics.Arcade.Sprite[];
   scoreText: Phaser.GameObjects.Text;
   timeText: Phaser.GameObjects.Text;
   timer: Phaser.Time.TimerEvent;
@@ -44,8 +44,12 @@ export class ClickerGame extends Scene {
       this.dropCoin();
     }
 
-    this.input.on('gameobjectdown', (pointer, gameObject) =>
-      this.clickCoin(gameObject),
+    this.input.on(
+      'gameobjectdown',
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObject: Phaser.Physics.Arcade.Sprite,
+      ) => this.clickCoin(gameObject),
     );
   }
 
@@ -63,7 +67,7 @@ export class ClickerGame extends Scene {
     this.coins.push(coin);
   }
 
-  clickCoin(coin) {
+  clickCoin(coin: Phaser.Physics.Arcade.Sprite) {
     //  Disable the coin from being clicked
     coin.disableInteractive();
 
@@ -103,7 +107,7 @@ export class ClickerGame extends Scene {
     this.input.off('gameobjectdown');
 
     //  Save our highscore to the registry
-    const highscore = this.registry.get('highscore');
+    const highscore = this.registry.get('highscore') as number;
 
     if (this.score > highscore) {
       this.registry.set('highscore', this.score);

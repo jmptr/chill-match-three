@@ -1,4 +1,4 @@
-import {Scene} from 'phaser';
+import { Scene } from 'phaser';
 
 export class GameOver extends Scene {
   constructor() {
@@ -7,7 +7,7 @@ export class GameOver extends Scene {
 
   create() {
     //  Get the current highscore from the registry
-    const score = this.registry.get('highscore');
+    const score = this.registry.get('highscore') as number;
 
     const textStyle = {
       fontFamily: 'Arial Black',
